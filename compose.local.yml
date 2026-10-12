@@ -1,0 +1,7 @@
+# Build the patched source instead of using the published upstream image.
+# docker compose -f compose.yml -f compose.local.yml up --build -d
+services:
+  asspp:
+    image: assppweb:local
+    build:
+      context: .

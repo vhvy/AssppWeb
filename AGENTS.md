@@ -108,6 +108,7 @@ The Wisp server validates target hosts via `hostname_whitelist` in `backend/src/
 - `init.itunes.apple.com` — bag endpoint
 - `/^p\d+-buy\.itunes\.apple\.com$/` — pod-based hosts
 - `downloaddispatch.itunes.apple.com` — redownload dispatch endpoint (failureType 5002 fallback)
+- `fpinit.itunes.apple.com` and `s.mzstatic.com` — browser-side SAP setup and certificate fetch
 - Port restricted to `443` only
 - Direct IP targets blocked (`allow_direct_ip = false`)
 - Loopback IP targets blocked (`allow_loopback_ips = false`)
@@ -143,11 +144,21 @@ The backend proxies the bag endpoint via `GET /api/bag?guid=<deviceId>` using No
 - Plist build/parse (`frontend/src/apple/plist.ts`) uses native XML builder and browser-native `DOMParser`
 - Cookie helper (`frontend/src/apple/cookies.ts`) — `extractAndMergeCookies(rawHeaders, existingCookies)` replaces the repeated extract-and-merge pattern across all Apple protocol files
 
+### SAP Authentication
+
+- `frontend/src/apple/sap/` ports PR #89's Unicorn TCI WASM signer. The exact UTF-8 authentication body is signed in a browser Web Worker; credentials must never be sent to backend signing routes.
+- Bag SAP configuration selects the setup certificate, key exchange endpoint and protocol version. Both Apple requests use `appleRequest()` through Wisp.
+- `backend/src/services/sapAssets.ts` extracts four public Apple binaries, verifies original and stripped SHA-256 pins, and caches them in `DATA_DIR/sap-assets`. Authenticated `/api/sap-assets/*` routes serve only these fixed files.
+- Docker builds prebundle those assets. Initial extraction downloads part of Apple's update package; it requires access to `swcdn.apple.com`.
+- Normalize both initial and redirected legacy authentication URLs to `/WebObjects/MZFinance.woa/wa/authenticate/`, preserving routing queries. Resolve relative redirects against the current URL.
+- Retry HTTP 204/404/429/5xx up to three attempts with 10s/20s waits and bounded `Retry-After`. Re-sign every replay and merge its cookies. Exhausted transient retries must not enter the outer retry loop again.
+
 ### Frontend Shared Components (`components/common/`)
 
 - **Alert** — `<Alert type="error|success|warning">` for status messages (replaces inline alert divs)
 - **Modal** — `<Modal open={bool} onClose={fn} title={string}>` for dialog overlays
 - **Spinner** — inline SVG loading spinner for buttons
+- **SapStatus** — shared login preparation/progress indicator
 - **CountrySelect** — optgroup-based country dropdown with "Available Regions" + "All Regions"
 - **AppIcon** — 3 sizes (40/56/80px), rounded corners, letter fallback
 - **Badge** — color-coded status pill

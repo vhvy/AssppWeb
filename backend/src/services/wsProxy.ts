@@ -1,6 +1,6 @@
-import { Server as HttpServer } from "http";
-import { server as wisp } from "@mercuryworkshop/wisp-js/server";
-import { accessPasswordHash, verifyAccessToken } from "../config.js";
+import { Server as HttpServer } from 'http';
+import { server as wisp } from '@mercuryworkshop/wisp-js/server';
+import { accessPasswordHash, verifyAccessToken } from '../config.js';
 
 // Allow only Apple hosts required by bag/auth/purchase/version/download flows.
 wisp.options.hostname_whitelist = [
@@ -9,6 +9,8 @@ wisp.options.hostname_whitelist = [
   /^init\.itunes\.apple\.com$/,
   /^p\d+-buy\.itunes\.apple\.com$/,
   /^downloaddispatch\.itunes\.apple\.com$/,
+  /^fpinit\.itunes\.apple\.com$/,
+  /^s\.mzstatic\.com$/,
 ];
 wisp.options.port_whitelist = [443];
 wisp.options.allow_direct_ip = false;
@@ -19,15 +21,15 @@ wisp.options.allow_private_ips = true;
 wisp.options.allow_loopback_ips = false;
 
 export function setupWsProxy(server: HttpServer) {
-  server.on("upgrade", (req, socket, head) => {
-    if (req.url?.startsWith("/wisp")) {
+  server.on('upgrade', (req, socket, head) => {
+    if (req.url?.startsWith('/wisp')) {
       if (accessPasswordHash) {
-        const url = new URL(req.url, "http://localhost");
+        const url = new URL(req.url, 'http://localhost');
         // Cloudflare URL normalization may append a trailing slash to the query
         // string (e.g. ?token=abc/ instead of ?token=abc), so strip it.
-        const token = (url.searchParams.get("token") || "").replace(/\/+$/, "");
+        const token = (url.searchParams.get('token') || '').replace(/\/+$/, '');
         if (!verifyAccessToken(token)) {
-          socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+          socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
           socket.destroy();
           return;
         }
@@ -35,7 +37,7 @@ export function setupWsProxy(server: HttpServer) {
 
       wisp.routeRequest(req, socket, head);
     } else {
-      socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
+      socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
       socket.destroy();
     }
   });

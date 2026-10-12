@@ -63,6 +63,24 @@ curl -O https://raw.githubusercontent.com/Lakr233/AssppWeb/main/compose.yml
 docker compose up -d
 ```
 
+To build changes from a local checkout instead of running the published image:
+
+```bash
+docker compose -f compose.yml -f compose.local.yml up --build -d
+```
+
+Apple sign-in uses browser-side SAP request signing. The first image build
+extracts and verifies public Apple signing assets from `swcdn.apple.com`,
+downloading roughly 380 MB. Docker caches this stage. The browser downloads
+roughly 14 MB of signing assets once and displays preparation progress.
+Certificate and setup requests use the encrypted Wisp tunnel to
+`s.mzstatic.com` and `fpinit.itunes.apple.com`; Apple credentials stay in the
+browser. This integration is based on upstream PRs #89, #91 and #93.
+
+Pushes to `fix/apple-id-auth` also build and publish amd64/arm64 images to
+the fork's GHCR namespace, tagged `fix-apple-id-auth` and with the short
+commit SHA. The branch build does not replace the default branch's `latest`.
+
 **Environment Variables**
 
 | Variable                                    | Default         | Description                                                                                 |

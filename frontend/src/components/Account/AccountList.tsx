@@ -1,13 +1,15 @@
-import { useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import PageContainer from "../Layout/PageContainer";
-import { useAccountsStore } from "../../store/accounts";
-import { storeIdToCountry } from "../../apple/config";
+import { useEffect } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import PageContainer from '../Layout/PageContainer';
+import { useAccountsStore } from '../../store/accounts';
+import { useSapWarmup } from '../../hooks/useSapWarmup';
+import { storeIdToCountry } from '../../apple/config';
 
 export default function AccountList() {
   const { t } = useTranslation();
   const { accounts, loading, loadAccounts } = useAccountsStore();
+  useSapWarmup();
 
   useEffect(() => {
     loadAccounts();
@@ -15,19 +17,19 @@ export default function AccountList() {
 
   return (
     <PageContainer
-      title={t("accounts.title")}
+      title={t('accounts.title')}
       action={
         <Link
           to="/accounts/add"
           className="inline-flex min-h-10 items-center rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
         >
-          {t("accounts.add")}
+          {t('accounts.add')}
         </Link>
       }
     >
       {loading ? (
         <div className="text-center text-gray-500 dark:text-gray-400 py-12">
-          {t("accounts.loading")}
+          {t('accounts.loading')}
         </div>
       ) : accounts.length === 0 ? (
         <div className="my-4 flex flex-col items-center justify-center rounded-3xl bg-white px-6 py-16 text-center shadow-sm ring-1 ring-black/5 dark:bg-gray-900 dark:ring-white/10">
@@ -47,10 +49,10 @@ export default function AccountList() {
             </svg>
           </div>
           <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
-            {t("accounts.empty")}
+            {t('accounts.empty')}
           </h3>
           <p className="mb-6 max-w-full whitespace-nowrap text-[clamp(0.5625rem,2.8vw,0.875rem)] leading-relaxed tracking-[-0.015em] text-gray-500 dark:text-gray-400">
-            {t("accounts.emptyDesc")}
+            {t('accounts.emptyDesc')}
           </p>
           <Link
             to="/accounts/add"
@@ -69,7 +71,7 @@ export default function AccountList() {
                 d="M12 4.5v15m7.5-7.5h-15"
               />
             </svg>
-            {t("accounts.addFirst")}
+            {t('accounts.addFirst')}
           </Link>
         </div>
       ) : (
@@ -87,8 +89,8 @@ export default function AccountList() {
                   className={({ isActive }) =>
                     `flex items-center gap-4 p-4 transition-colors ${
                       isActive
-                        ? "bg-blue-50 dark:bg-blue-950/50"
-                        : "hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-gray-800/70 dark:active:bg-gray-800"
+                        ? 'bg-blue-50 dark:bg-blue-950/50'
+                        : 'hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-gray-800/70 dark:active:bg-gray-800'
                     }`
                   }
                 >

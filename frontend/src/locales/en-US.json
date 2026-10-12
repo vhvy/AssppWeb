@@ -111,9 +111,13 @@
       "codeHelp": "Enter the verification code from your trusted device.",
       "signIn": "Sign In",
       "verify": "Verify",
+      "retrying": "Apple did not respond (HTTP {{status}}). Retrying in {{seconds}}s (attempt {{attempt}} of {{attempts}})…",
       "cancel": "Cancel",
       "authFailed": "Authentication failed",
-      "addSuccess": "Account added successfully."
+      "addSuccess": "Account added successfully.",
+      "preparingAssets": "Preparing signing components {{percent}}%",
+      "preparingSigner": "Initializing the request signer…",
+      "signerFailed": "Failed to prepare signing components: {{error}}"
     },
     "detail": {
       "title": "Account Details",
@@ -130,6 +134,7 @@
       "reauthFailed": "Re-authentication failed",
       "code": "2FA Verification Code",
       "verify": "Verify",
+      "retrying": "Apple did not respond (HTTP {{status}}). Retrying in {{seconds}}s (attempt {{attempt}} of {{attempts}})…",
       "reauth": "Re-authenticate",
       "delete": "Delete Account",
       "confirmDelete": "Confirm Delete",
@@ -453,7 +458,9 @@
       "emptyBody": "Authentication failed: server returned HTTP {{status}} with empty body",
       "missingAccountInfo": "Missing accountInfo in response",
       "missingAddress": "Missing address in response",
-      "unknownReason": "Authentication failed for an unknown reason"
+      "unknownReason": "Authentication failed for an unknown reason",
+      "transientFailure": "Authentication failed: Apple did not respond after {{attempts}} attempts (HTTP {{statuses}}). Please try again later.",
+      "retryLater": "Authentication failed: Apple asked to wait {{seconds}} seconds before trying again. Please try again later."
     }
   },
   "toast": {

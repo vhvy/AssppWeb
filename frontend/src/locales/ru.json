@@ -111,9 +111,13 @@
       "codeHelp": "Введите код проверки с вашего доверенного устройства.",
       "signIn": "Войти",
       "verify": "Проверить",
+      "retrying": "Apple не ответил (HTTP {{status}}). Повтор через {{seconds}} с (попытка {{attempt}} из {{attempts}})…",
       "cancel": "Отмена",
       "authFailed": "Ошибка аутентификации",
-      "addSuccess": "Аккаунт успешно добавлен."
+      "addSuccess": "Аккаунт успешно добавлен.",
+      "preparingAssets": "Подготовка компонентов подписи {{percent}}%",
+      "preparingSigner": "Подготовка подписи запроса…",
+      "signerFailed": "Не удалось подготовить подпись: {{error}}"
     },
     "detail": {
       "title": "Детали аккаунта",
@@ -453,7 +457,9 @@
       "emptyBody": "Ошибка аутентификации: сервер вернул HTTP {{status}} с пустым телом",
       "missingAccountInfo": "В ответе отсутствует accountInfo",
       "missingAddress": "В ответе отсутствует address",
-      "unknownReason": "Аутентификация не удалась по неизвестной причине"
+      "unknownReason": "Аутентификация не удалась по неизвестной причине",
+      "transientFailure": "Ошибка аутентификации: Apple не ответил (HTTP {{statuses}}), попыток: {{attempts}}. Повторите попытку позже.",
+      "retryLater": "Ошибка аутентификации: Apple просит подождать {{seconds}} с. Повторите попытку позже."
     }
   },
   "toast": {
