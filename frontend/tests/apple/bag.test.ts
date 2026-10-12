@@ -71,6 +71,36 @@ describe('apple/bag', () => {
     expect(result.authURL).toBe(defaultAuthURL);
   });
 
+  it.each(['root', 'urlBag'])(
+    'retains download recovery endpoints from %s without discarding SAP settings',
+    async (location) => {
+      const values = {
+        redownloadProduct:
+          'https://downloaddispatch.itunes.apple.com/r/redownload',
+        updateProduct:
+          'https://downloaddispatch.itunes.apple.com/up/updateProduct',
+        'sign-sap-setup':
+          'https://fpinit.itunes.apple.com/v1/signSapSetup/legacy',
+        'sign-sap-setup-cert': 'https://s.mzstatic.com/sap/setupCert.plist',
+        'sign-sap-version': 200,
+      };
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockResolvedValue({
+          ok: true,
+          text: async () =>
+            buildPlist(location === 'root' ? values : { urlBag: values }),
+        }),
+      );
+      await expect(fetchBag('aabbccddeeff')).resolves.toMatchObject({
+        authURL: defaultAuthURL,
+        redownloadURL: values.redownloadProduct,
+        updateURL: values.updateProduct,
+        sapEndpoints: { version: 200 },
+      });
+    },
+  );
+
   it('falls back when bag proxy returns non-OK', async () => {
     vi.stubGlobal(
       'fetch',

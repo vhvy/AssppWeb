@@ -109,6 +109,7 @@ The Wisp server validates target hosts via `hostname_whitelist` in `backend/src/
 - `/^p\d+-buy\.itunes\.apple\.com$/` — pod-based hosts
 - `downloaddispatch.itunes.apple.com` — redownload dispatch endpoint (failureType 5002 fallback)
 - `fpinit.itunes.apple.com` and `s.mzstatic.com` — browser-side SAP setup and certificate fetch
+- `uclient-api.itunes.apple.com` — public iOS version catalog for download recovery
 - Port restricted to `443` only
 - Direct IP targets blocked (`allow_direct_ip = false`)
 - Loopback IP targets blocked (`allow_loopback_ips = false`)
@@ -143,6 +144,7 @@ The backend proxies the bag endpoint via `GET /api/bag?guid=<deviceId>` using No
 - Authentication (`frontend/src/apple/authenticate.ts`) resolves bag endpoint, then sets `guid` via URL query manipulation to avoid duplicate/malformed query parameters
 - Plist build/parse (`frontend/src/apple/plist.ts`) uses native XML builder and browser-native `DOMParser`
 - Cookie helper (`frontend/src/apple/cookies.ts`) — `extractAndMergeCookies(rawHeaders, existingCookies)` replaces the repeated extract-and-merge pattern across all Apple protocol files
+- `downloadProduct()` in `frontend/src/apple/downloadProduct.ts` shares product download recovery across downloads and version queries. Empty `songList`/5002 responses fall back to version-pinned redownload and then bag-resolved `updateProduct` on empty HTTP 500 or another recoverable response. Authentication/license errors are preserved. Catalog requests carry no account cookies, DSID or token, and recovered app/bundle/version identifiers must match the request.
 
 ### SAP Authentication
 

@@ -11,6 +11,7 @@ wisp.options.hostname_whitelist = [
   /^downloaddispatch\.itunes\.apple\.com$/,
   /^fpinit\.itunes\.apple\.com$/,
   /^s\.mzstatic\.com$/,
+  /^uclient-api\.itunes\.apple\.com$/,
 ];
 wisp.options.port_whitelist = [443];
 wisp.options.allow_direct_ip = false;

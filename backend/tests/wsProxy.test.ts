@@ -39,6 +39,7 @@ describe('Wisp Proxy', () => {
       );
     expect(allows('fpinit.itunes.apple.com')).toBe(true);
     expect(allows('s.mzstatic.com')).toBe(true);
+    expect(allows('uclient-api.itunes.apple.com')).toBe(true);
     expect(allows('example.com')).toBe(false);
     expect(allows('s.mzstatic.com.example.com')).toBe(false);
     expect(wisp.options.port_whitelist).toEqual([443]);
